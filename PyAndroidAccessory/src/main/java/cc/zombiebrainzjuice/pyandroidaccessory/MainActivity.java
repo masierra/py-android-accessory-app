@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
         mText = (TextView) findViewById(R.id.display_area);
         mText.setMovementMethod(new ScrollingMovementMethod());
         mText.append("PyAndroidAccessory started ..." + System.getProperty("line.separator"));
-        mText.append("Nice code too!" + System.getProperty("line.separator"));
+        mText.append("Nice code too!!!" + System.getProperty("line.separator"));
         Log.d(TAG, "Start");
 
         Intent intent = getIntent();
