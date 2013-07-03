@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
+
+    <TextView
+            android:id="@+id/actuator_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:text="ACTUATOR"  />
+
+    <TextView
+            android:id="@+id/actuator_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/actuator_area"
+            android:layout_toLeftOf="@+id/actuator_decrease"
+            android:text="Click to activate actuator"  />
+
+    <Button
+            android:id="@+id/actuator_decrease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/actuator_area"
+            android:layout_toLeftOf="@+id/actuator_increase"
+            android:text="Decrease"  />
+
+    <Button
+            android:id="@+id/actuator_increase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/actuator_area"
+            android:text="Increase"  />
+
+    <TextView
+            android:id="@+id/sensor_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/actuator_decrease"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:text="SENSOR"  />
+
+    <TextView
+            android:id="@+id/display_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sensor_area"
+            android:gravity="bottom"  />
+
+</RelativeLayout>
