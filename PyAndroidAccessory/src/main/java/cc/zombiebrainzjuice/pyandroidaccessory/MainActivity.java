@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
     ParcelFileDescriptor mFileDescriptor;
     FileInputStream mInputStream;
     BufferedInputStream buf = null;
-    String TAG = "TestPy";
+    String TAG = "DebugPy";
 
     int mMaxIteration = 200;
     int i = 1;
@@ -79,30 +79,23 @@ public class MainActivity extends Activity {
 
         mText = (TextView) findViewById(R.id.display_area);
         mText.setMovementMethod(new ScrollingMovementMethod());
-        mText.append("PyAndroidAccessory started ..." + System.getProperty("line.separator"));
-        mText.append("Nice code too!!!" + System.getProperty("line.separator"));
-        Log.d(TAG, "Start");
 
         Intent intent = getIntent();
         mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
         mAccessory = intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
 
-        //if (mAccessory == null) {
-        //    Log.w(TAG, "Not started by the Accessory directly");
-        //    mText.append("Not started by the Accessory directly" + System.getProperty("line.separator"));
-        //    return;
-        //}
+        if (mAccessory == null) {
+            mText.append("Not started by the Accessory directly" + System.getProperty("line.separator"));
+            return;
+        }
 
-        //Log.d(TAG, mAccessory.toString());
-        //Log.d(TAG, "Now listening the Accessory");
-        //mFileDescriptor = mUsbManager.openAccessory(mAccessory);
-        //Log.d(TAG, mFileDescriptor.toString());
-
-        //if (mFileDescriptor != null) {
-        //    FileDescriptor fd = mFileDescriptor.getFileDescriptor();
-        //    mInputStream = new FileInputStream(fd);
-        //}
-
+        Log.v(TAG, mAccessory.toString());
+        mFileDescriptor = mUsbManager.openAccessory(mAccessory);
+        if (mFileDescriptor != null) {
+            FileDescriptor fd = mFileDescriptor.getFileDescriptor();
+            mInputStream = new FileInputStream(fd);
+        }
+        Log.v(TAG, mFileDescriptor.toString());
         //new Thread(mListenerTask).start();
 
     }
