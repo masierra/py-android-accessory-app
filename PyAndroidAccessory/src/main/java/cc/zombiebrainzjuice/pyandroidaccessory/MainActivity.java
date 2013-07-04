@@ -10,11 +10,14 @@ import android.os.ParcelFileDescriptor;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.BufferedInputStream;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,6 +28,7 @@ public class MainActivity extends Activity {
     UsbAccessory mAccessory;
     ParcelFileDescriptor mFileDescriptor;
     FileInputStream mInputStream;
+    FileOutputStream mOutputStream;
     String mMessage;
     String TAG = "DebugPy";
 
@@ -69,6 +73,40 @@ public class MainActivity extends Activity {
         }
     };
 
+    /** Called when the user clicks the Decrease/Increase button */
+    public void sendMessage(View view) {
+
+        byte direction = 0;
+
+        switch (view.getId()) {
+            case R.id.actuator_decrease:
+                direction = 1;
+                break;
+            case R.id.actuator_increase:
+                direction = 0;
+                break;
+        }
+
+        byte[] buffer = new byte[5];
+        buffer[0] = (byte) 'A';
+        for (int i = 0; i < 4; i++) {
+            buffer[i] = direction;
+        }
+
+        mMessage = ">>> ";
+        try {
+            mOutputStream.write(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+            mMessage += "Send error";
+            mText.post(mUpdateUI);
+        }
+        String msg = new String(buffer);
+        mMessage += msg + System.getProperty("line.separator");
+        mText.post(mUpdateUI);
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +129,7 @@ public class MainActivity extends Activity {
         if (mFileDescriptor != null) {
             FileDescriptor fd = mFileDescriptor.getFileDescriptor();
             mInputStream = new FileInputStream(fd);
+            mOutputStream = new FileOutputStream(fd);
         }
         Log.v(TAG, mFileDescriptor.toString());
         new Thread(mListenerTask).start();

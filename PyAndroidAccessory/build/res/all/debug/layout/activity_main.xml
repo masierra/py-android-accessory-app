@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/actuator_area"
             android:layout_toLeftOf="@+id/actuator_increase"
+            android:onClick="sendMessage"
             android:text="Decrease"  />
 
     <Button
