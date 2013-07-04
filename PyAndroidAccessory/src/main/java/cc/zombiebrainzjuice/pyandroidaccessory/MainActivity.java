@@ -25,19 +25,13 @@ public class MainActivity extends Activity {
     UsbAccessory mAccessory;
     ParcelFileDescriptor mFileDescriptor;
     FileInputStream mInputStream;
-    BufferedInputStream buf = null;
+    String mMessage;
     String TAG = "DebugPy";
-
-    int mMaxIteration = 200;
-    int i = 1;
 
     Runnable mUpdateUI = new Runnable() {
         @Override
         public void run() {
-            String message = String.valueOf(i) + '/';
-            message += String.valueOf(mMaxIteration) + ':';
-            message += System.getProperty("line.separator");
-            mText.append(message);
+            mText.append(mMessage);
         }
     };
 
@@ -45,30 +39,33 @@ public class MainActivity extends Activity {
         @Override
         public void run() {
 
-            if (i <= mMaxIteration) {
-                Log.d(TAG, String.valueOf(i));
-                byte[] buffer = new byte[4];
-                int ret;
+            byte[] buffer = new byte[5];
+            int ret;
 
-                try {
-                    ret = mInputStream.read(buffer);
-                    Log.d(TAG, "Return: " + ret);
-                    Log.d(TAG, buffer.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d(TAG, "Error during read ");
+            try {
+                mMessage = ">>> ";
+                ret = mInputStream.read(buffer);
+                if (ret == 5) {
+                    String msg = new String(buffer);
+                    mMessage += msg;
+                } else {
+                    mMessage += "Read error";
                 }
 
-                mText.post(mUpdateUI);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                     e.printStackTrace();
-                }
-                i++;
-
-                new Thread(this).start();
+            } catch (IOException e) {
+                e.printStackTrace();
+                mMessage += "Read error";
             }
+
+            mMessage += System.getProperty("line.separator");
+            mText.post(mUpdateUI);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                 e.printStackTrace();
+            }
+
+            new Thread(this).start();
         }
     };
 
@@ -96,7 +93,7 @@ public class MainActivity extends Activity {
             mInputStream = new FileInputStream(fd);
         }
         Log.v(TAG, mFileDescriptor.toString());
-        //new Thread(mListenerTask).start();
+        new Thread(mListenerTask).start();
 
     }
 
