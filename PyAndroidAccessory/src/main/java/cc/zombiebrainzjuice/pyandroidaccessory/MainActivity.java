@@ -30,12 +30,20 @@ public class MainActivity extends Activity {
     FileInputStream mInputStream;
     FileOutputStream mOutputStream;
     String mMessage;
+    String mMessage2;
     String TAG = "DebugPy";
 
     Runnable mUpdateUI = new Runnable() {
         @Override
         public void run() {
             mText.append(mMessage);
+        }
+    };
+
+    Runnable mUpdateUI2 = new Runnable() {
+        @Override
+        public void run() {
+            mText.append(mMessage2);
         }
     };
 
@@ -76,34 +84,33 @@ public class MainActivity extends Activity {
     /** Called when the user clicks the Decrease/Increase button */
     public void sendMessage(View view) {
 
-        byte direction = 0;
+        char direction = 0;
 
         switch (view.getId()) {
             case R.id.actuator_decrease:
-                direction = 1;
+                direction = '1';
                 break;
             case R.id.actuator_increase:
-                direction = 0;
+                direction = '0';
                 break;
         }
 
         byte[] buffer = new byte[5];
         buffer[0] = (byte) 'A';
-        for (int i = 0; i < 4; i++) {
-            buffer[i] = direction;
+        for (int i = 1; i < 5; i++) {
+            buffer[i] = (byte) direction;
         }
 
-        mMessage = ">>> ";
+        mMessage2 = "<<< ";
         try {
             mOutputStream.write(buffer);
         } catch (IOException e) {
             e.printStackTrace();
-            mMessage += "Send error";
-            mText.post(mUpdateUI);
+            mMessage2 += "Send error";
         }
         String msg = new String(buffer);
-        mMessage += msg + System.getProperty("line.separator");
-        mText.post(mUpdateUI);
+        mMessage2 += msg + System.getProperty("line.separator");
+        mText.post(mUpdateUI2);
 
     }
 
